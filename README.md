@@ -7,7 +7,7 @@ Sovellus toteutettiin ennakkotehtävänä TODO-appin vaatimusten pohjalta. Halus
 Sovellus toimii sekä mobiilissa (Expo / iOS Simulator) että webissä.
 
 Testaa:
-👉
+👉 https://eralista.vercel.app/
 
 ## Miksi tämä näkökulma valittiin
 
