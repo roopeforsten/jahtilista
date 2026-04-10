@@ -136,3 +136,17 @@ npx expo start
 	web: w
 	iOS: i
 ```
+
+## Kuvakaappaukset
+
+### Kirjautuminen
+
+![Kirjautuminen](./screenshots/kirjautuminen.png)
+
+### Etusivu
+
+![Etusivu](./screenshots/etusivu.png)
+
+### Ryhmät
+
+![Ryhmät](./screenshots/ryhmat.png)
