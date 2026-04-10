@@ -1,50 +1,122 @@
-# Welcome to your Expo app 👋
+# JahtiLista
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+JahtiLista on Expo Router + Supabase -pohjainen tehtäväsovellus, joka on suunnattu metsästysseurojen ja jahtipäivän valmisteluiden hallintaan.
 
-## Get started
+Sovellus toteutettiin ennakkotehtävänä TODO-appin vaatimusten pohjalta. Halusin tuoda tehtävään mukaan henkilökohtaisen näkökulman, joten valitsin käyttökontekstiksi metsästysseurat. Tällä tavalla perinteinen todo-sovellus sai käytännöllisemmän käyttötarkoituksen: tehtäviä voidaan hallita sekä henkilökohtaisesti että ryhmänä, mikä sopii hyvin jahtipäivän valmisteluihin.
 
-1. Install dependencies
+## Miksi tämä näkökulma valittiin
 
-   ```bash
-   npm install
-   ```
+Valitsin metsästysseura-kontekstin, koska halusin tehdä tehtävästä persoonallisemman mutta silti täysin tehtävänannon mukaisen. Perinteinen todo-sovellus on teknisesti toimiva, mutta metsästysseuran käyttöön suunnattu ratkaisu toi mukaan aidon käyttötapauksen:
 
-2. Start the app
+- tehtäviä voidaan tehdä yksin tai yhdessä
+- ryhmän jäsenet näkevät yhteiset tehtävät
+- tehtäviä voidaan ottaa itselle työn alle
+- valmiit tehtävät erottuvat omaksi kokonaisuudekseen
 
-   ```bash
-   npx expo start
-   ```
+Näin sovellus ei jäänyt vain CRUD-harjoitukseksi, vaan siitä muodostui pieni monikäyttäjäsovellus todelliseen käyttökontekstiin.
 
-In the output, you'll find options to open the app in a
+## Teknologiat
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- Expo / Expo Router
+- React Native
+- TypeScript
+- Supabase Auth
+- Supabase Database
+- Supabase Row Level Security
+- Expo Web
+- iOS Simulator -testaus
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Ominaisuudet
 
-## Get a fresh project
+### 1. Kirjautuminen ja rekisteröityminen
 
-When you're ready, run:
+Sovelluksessa käyttäjä voi:
+
+- luoda tilin sähköpostilla ja salasanalla
+- kirjautua sisään
+- saada virheilmoituksen, jos tiedot ovat väärin tai kentät ovat tyhjiä
+
+Tämä toteutettiin Supabase Authilla, koska se täytti tehtävänannon vaatimukset suoraan ja piti toteutuksen kevyenä.
+
+### 2. Henkilökohtaiset tehtävät
+
+Käyttäjä voi lisätä henkilökohtaisia tehtäviä, jotka näkyvät vain hänelle.
+
+Tämä ratkaistiin niin, että tehtävä voidaan luoda ilman ryhmää. Näin käyttäjä voi käyttää sovellusta myös täysin henkilökohtaisena tehtävälistana.
+
+### 3. Ryhmätehtävät
+
+Käyttäjä voi kuulua ryhmiin ja lisätä tehtäviä valittuun aktiiviseen ryhmään.
+
+Ryhmän jäsenet näkevät saman ryhmän tehtävät. Tämä valinta tehtiin, jotta sovellus tukee yhteistä organisointia esimerkiksi ennen jahtia.
+
+### 4. Tehtävän valinta itselle
+
+Ryhmän avoin tehtävä voidaan ottaa omalle vastuulle valitsemalla se.
+
+Kun tehtävä valitaan:
+
+- sen status muuttuu työn alle
+- tehtävään tallentuu käyttäjä, joka tekee tehtävää
+
+Tämä ratkaisu tehtiin, jotta ryhmän yhteiset tehtävät eivät jää epämääräisiksi, vaan näkyy selvästi kuka tekee mitä.
+
+### 5. Valmiit tehtävät erillään
+
+Valmiit tehtävät näytetään omassa osiossaan.
+
+Tämä parantaa käytettävyyttä, koska aktiiviset tehtävät ja valmiit tehtävät eivät sekoitu samaan listaan.
+
+### 6. Ryhmien hallinta
+
+Sovelluksessa voi:
+
+- luoda ryhmän
+- lisätä ryhmään jäseniä sähköpostilla
+- poistaa jäseniä
+- poistua ryhmästä
+- poistaa koko ryhmän, jos on sen omistaja
+
+Ryhmien hallinta toteutettiin kevyesti ilman raskasta admin-paneelia, jotta kokonaisuus pysyy selkeänä mutta silti monikäyttäjäisenä.
+
+### 7. Virheiden käsittely ja käyttöliittymä
+
+Sovelluksessa huomioitiin:
+
+- tyhjät syötteet
+- väärät kirjautumistiedot
+- lataustilat
+- toimintonäppäinten estäminen latauksen aikana
+- selkeä ja mobiiliin sopiva käyttöliittymä
+
+Visuaalisesti sovellus suunniteltiin tummalla ja jahtihenkisellä värimaailmalla, jotta käyttöliittymä tukee valittua käyttökontekstia.
+
+## Arkkitehtuuri lyhyesti
+
+Sovellus käyttää Supabasea sekä autentikointiin että tietokantaan.
+
+Keskeiset taulut:
+
+- `profiles`
+- `groups`
+- `group_members`
+- `tasks`
+
+Tehtävillä on mahdollisuus olla:
+
+- henkilökohtaisia
+- ryhmäkohtaisia
+
+Ryhmän tehtävissä voidaan lisäksi tallentaa:
+
+- kuka loi tehtävän
+- kuka tekee tehtävää
+- mikä on tehtävän tila
+
+## Käynnistys paikallisesti
+
+1. Asenna riippuvuudet
 
 ```bash
-npm run reset-project
+npm install
 ```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
