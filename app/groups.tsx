@@ -2,14 +2,14 @@ import { Session } from "@supabase/supabase-js";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-    Alert,
-    Modal,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  Alert,
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { supabase } from "../lib/supabase";
@@ -176,6 +176,22 @@ export default function GroupsScreen() {
       return;
     }
 
+    const { error: membershipError } = await supabase
+      .from("group_members")
+      .insert({
+        group_id: data.id,
+        user_id: session.user.id,
+      });
+
+    if (membershipError) {
+      setLoading(false);
+      setGroupMessageType("error");
+      setGroupMessage(
+        `Ryhmän jäsenlisäys epäonnistui: ${membershipError.message}`,
+      );
+      return;
+    }
+
     setGroupName("");
     await fetchAllGroups();
     setLoading(false);
@@ -275,9 +291,9 @@ export default function GroupsScreen() {
 
     if (!profile) {
       setLoading(false);
-      Alert.alert(
-        "Käyttäjää ei löytynyt",
-        "Varmista, että käyttäjä on jo rekisteröitynyt sovellukseen.",
+      setGroupMessageType("error");
+      setGroupMessage(
+        "Käyttäjää ei löytynyt. Varmista, että käyttäjä on jo rekisteröitynyt sovellukseen.",
       );
       return;
     }
@@ -290,11 +306,27 @@ export default function GroupsScreen() {
       return;
     }
 
+    const { error: insertError } = await supabase.from("group_members").insert({
+      group_id: selectedGroup.id,
+      user_id: profile.id,
+    });
+
+    if (insertError) {
+      setLoading(false);
+      Alert.alert(
+        "Virhe",
+        `Jäsenen lisääminen epäonnistui: ${insertError.message}`,
+      );
+      return;
+    }
+
     setMemberEmail("");
+    setLoading(false);
+    setGroupMessageType("success");
+    setGroupMessage(`${profile.email} lisättiin ryhmään.`);
+
     await fetchMembers(selectedGroup);
     await fetchAllGroups();
-    setLoading(false);
-    Alert.alert("Onnistui", `${profile.email} lisättiin ryhmään.`);
   }
 
   async function removeMember(member: MemberWithEmail) {
@@ -557,6 +589,19 @@ export default function GroupsScreen() {
                   onChangeText={setMemberEmail}
                 />
 
+                {groupMessage ? (
+                  <Text
+                    style={[
+                      styles.messageText,
+                      groupMessageType === "error"
+                        ? styles.errorText
+                        : styles.successText,
+                    ]}
+                  >
+                    {groupMessage}
+                  </Text>
+                ) : null}
+
                 <Pressable
                   style={styles.primaryButton}
                   onPress={addMemberByEmail}
@@ -798,7 +843,9 @@ const styles = StyleSheet.create({
   },
   memberEmail: {
     color: "#fffaf2",
-    flex: 1,
+    fontSize: 15,
+    fontWeight: "500",
+    flexShrink: 1,
   },
   memberRole: {
     color: "#d8a15f",
