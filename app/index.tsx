@@ -1,13 +1,13 @@
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-    ActivityIndicator,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { supabase } from "../lib/supabase";
@@ -303,8 +303,26 @@ export default function HomeScreen() {
       });
 
       if (error) {
-        setAuthMessageType("error");
-        setAuthMessage("Sähköposti tai salasana on väärin.");
+        const errorMessage = error.message.toLowerCase();
+
+        if (
+          errorMessage.includes("email not confirmed") ||
+          errorMessage.includes("email not verified") ||
+          errorMessage.includes("signup not confirmed")
+        ) {
+          setAuthMessageType("error");
+          setAuthMessage(
+            "Käyttäjän rekisteröintiä ei vahvistettu. Tarkista sähköposti ja vahvista tili ennen kirjautumista.",
+          );
+        } else if (errorMessage.includes("rate limit")) {
+          setAuthMessageType("error");
+          setAuthMessage(
+            "Vahvistussähköposteja on pyydetty liian monta kertaa. Odota hetki ja kokeile uudelleen.",
+          );
+        } else {
+          setAuthMessageType("error");
+          setAuthMessage("Sähköposti tai salasana on väärin.");
+        }
       }
     }
 

@@ -9,7 +9,38 @@ Sovellus toimii sekä mobiilissa (Expo / iOS Simulator) että webissä.
 ## Demo
 
 Testaa sovellusta täällä:  
-[https://eralista.vercel.app/]
+[https://eralista.vercel.app/](https://eralista.vercel.app/)
+
+## Kirjautuminen ja rekisteröityminen
+
+Sovellukseen voi luoda uuden käyttäjän sähköpostilla ja salasanalla.
+
+### Rekisteröityminen
+
+1. Valitse **Luo tili**
+2. Syötä sähköposti ja salasana
+3. Tarkista sähköpostisi
+4. Vahvista rekisteröinti sähköpostissa olevasta linkistä
+5. Palaa sovellukseen ja kirjaudu sisään
+
+### Kirjautuminen
+
+1. Valitse **Kirjaudu sisään**
+2. Syötä rekisteröity sähköposti ja salasana
+3. Jos tiliä ei ole vielä vahvistettu, sovellus ilmoittaa että rekisteröintiä ei ole vahvistettu
+
+## Huomio sähköpostivahvistuksesta
+
+Sovellus käyttää Supabase Authia sähköpostivahvistukseen.
+
+Supabasen oletus-email providerissa on tiukka lähetysrajoitus (**rate limit**), joten vahvistusviestin lähetys voi tilapäisesti estyä, jos rekisteröintiä testataan useita kertoja lyhyessä ajassa.
+
+Tällöin käyttäjä voi nähdä virheen, joka liittyy sähköpostien lähetysrajoitukseen. Tämä ei johdu varsinaisesta sovellusvirheestä, vaan Supabasen oletusasetuksista testikäytössä.
+
+Käytännössä tämä tarkoittaa:
+
+- jos vahvistusviesti ei tule heti, odota hetki ja kokeile uudelleen myöhemmin
+- sovelluksen toiminnallisuudet ovat testattavissa vahvistetulla käyttäjätilillä normaalisti
 
 ## Miksi tämä näkökulma valittiin
 
